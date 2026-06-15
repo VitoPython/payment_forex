@@ -1,6 +1,8 @@
 .wrapper {
   width: 100%;
-  max-width: 1240px;
+  // Sized so each of the 4 cards is ~345px wide (matching the Figma component):
+  // 4 * 345 + 3 * 20 (gap) + 2 * 48 (padding) ≈ 1536px.
+  max-width: 1536px;
   margin: 0 auto;
   padding: clamp(40px, 7vw, 96px) clamp(20px, 4vw, 48px);
 }
