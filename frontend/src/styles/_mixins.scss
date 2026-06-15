@@ -1,0 +1,30 @@
+// Reusable SCSS mixins shared across component modules.
+
+// Soft outer glow used on cards and the highlighted plan.
+@mixin glow($color, $spread: 40px, $alpha: 0.35) {
+  box-shadow: 0 0 $spread rgba($color, $alpha);
+}
+
+// A 1px gradient border drawn with a masked pseudo-element so it can use a
+// gradient (regular `border` cannot). Apply to a position: relative element.
+@mixin gradient-border($from, $to, $radius, $width: 1px) {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: $radius;
+    padding: $width;
+    background: linear-gradient(160deg, $from, $to);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@mixin focus-ring {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

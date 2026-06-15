@@ -1,0 +1,65 @@
+:root {
+  // Surfaces — radial background stops from the Figma design.
+  --bg: #160720;
+  --bg-center: #261433;
+  --bg-edge: #160720;
+  --panel-from: #251139;
+  --panel-to: #180c2a;
+  --panel-solid: #1c1030;
+
+  // Accents (Figma: linear gradient #BE4EFF -> #FF4AB7).
+  --accent: #ff4ab7;
+  --accent-2: #be4eff;
+  --accent-soft: rgba(255, 74, 183, 0.16);
+
+  // Text
+  --text: #f5f1ff;
+  --muted: #a99fc4;
+  --label: #8a7fa8;
+
+  // Lines & chips
+  --border: rgba(168, 130, 255, 0.16);
+  --border-strong: rgba(168, 130, 255, 0.32);
+  --chip-bg: rgba(123, 79, 201, 0.18);
+  --chip-text: #ccbef0;
+
+  --radius-card: 22px;
+  --radius-pill: 999px;
+  --radius-md: 14px;
+
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background-color: var(--bg);
+  // Radial gradient from the Figma design: #261433 center -> #160720 edges.
+  background-image: radial-gradient(
+    125% 125% at 50% 0%,
+    var(--bg-center) 0%,
+    var(--bg-edge) 60%
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}

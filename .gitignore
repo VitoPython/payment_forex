@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+# Build output
+.next/
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# Environment
+.env
+.env.local
+.env*.local
+# Misc
+_preview*.png
+.DS_Store
+
+# Editor / tooling
+.claude/
+.vscode/

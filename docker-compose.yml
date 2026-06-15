@@ -1,0 +1,33 @@
+# Single-domain deployment: only the frontend is published. The browser calls
+# /api/* on the same origin and Next.js rewrites those to the internal backend,
+# so no CORS, no public backend URL and no build-time API URL are needed.
+#
+# Local:   `docker compose up --build`  ->  http://localhost:3000
+# Dokploy: deploy this compose, then assign a domain to the `frontend` service
+#          (container port 3000). The backend stays internal.
+
+services:
+  backend:
+    build: ./backend
+    container_name: forex-backend
+    environment:
+      UPSTREAM_URL: ${UPSTREAM_URL:-https://api.zomrodev.online/v1/api/proxy/}
+      DATACENTERS: ${DATACENTERS:-12,17,19,21}
+      FOREX_GROUP_TAG: ${FOREX_GROUP_TAG:-9}
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS:-120}
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: forex-frontend
+    environment:
+      # SSR and the /api proxy reach the backend over the compose network.
+      API_BASE_URL_INTERNAL: http://backend:8000
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped

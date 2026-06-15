@@ -1,0 +1,38 @@
+# ---- Dependencies -----------------------------------------------------
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json* ./
+# Use a clean, reproducible install. Falls back to `npm install` if no lockfile.
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+# ---- Build ------------------------------------------------------------
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# The browser calls the API on the same origin (Next.js rewrites proxy /api to
+# the backend), so no public backend URL needs to be baked in at build time.
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN npm run build
+
+# ---- Runtime ----------------------------------------------------------
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000
+
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs
+
+# Standalone output bundles only what's needed to run the server.
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+
+CMD ["node", "server.js"]
